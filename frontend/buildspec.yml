@@ -23,11 +23,25 @@ phases:
       - npm run build
   post_build:
     commands:
-      - echo Build completed. Preparing artifacts for deployment
-      - echo Copying appspec.yml from root to dist directory...
-      - cp ../appspec.yml dist/
-      - echo Copying scripts directory from root to dist directory...
-      - cp -R ../scripts/ dist/
+      - echo Build completed. Searching for appspec.yml...
+      - |
+        if [ -f "../appspec.yml" ]; then
+          cp ../appspec.yml dist/;
+          cp -R ../scripts/ dist/;
+          echo "Copied configuration from repository root.";
+        elif [ -f "appspec.yml" ]; then
+          cp appspec.yml dist/;
+          cp -R scripts/ dist/;
+          echo "Copied configuration from frontend directory.";
+        else
+          echo "CRITICAL ERROR: appspec.yml not found!";
+          echo "Showing current directory contents:";
+          ls -la;
+          echo "Showing parent directory contents:";
+          ls -la ..;
+          exit 1;
+        fi
+
 artifacts:
   files:
     - '**/*'
