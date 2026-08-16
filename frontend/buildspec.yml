@@ -6,7 +6,7 @@ env:
 phases:
   install:
     runtime-versions:
-      nodejs: 20  # Specify the Node.js version
+      nodejs: 20
     commands:
       - echo Navigating to the frontend directory...
       - cd frontend
@@ -24,10 +24,10 @@ phases:
   post_build:
     commands:
       - echo Build completed. Preparing artifacts for deployment
-      - echo Copying appspec.yml to dist directory...
-      - cp appspec.yml dist/ || echo "Failed to copy appspec.yml"
-      - echo Copying scripts directory to dist directory...
-      - cp -R scripts/ dist/ || echo "Failed to copy scripts directory"
+      - echo Copying appspec.yml from root to dist directory...
+      - cp ../appspec.yml dist/
+      - echo Copying scripts directory from root to dist directory...
+      - cp -R ../scripts/ dist/
 artifacts:
   files:
     - '**/*'
@@ -35,4 +35,4 @@ artifacts:
   discard-paths: no
 cache:
   paths:
-    - frontend/node_modules/**/*  # Caches node_modules for the frontend app to speed up future builds
+    - frontend/node_modules/**/*
